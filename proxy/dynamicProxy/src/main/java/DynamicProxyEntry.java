@@ -1,6 +1,6 @@
 import ClothFactory.ClothFactory;
 import ClothFactory.LiangdianFactory;
-import ClothProxy.ClothHandler;
+import handler.ClothHandler;
 
 import java.lang.reflect.Proxy;
 
