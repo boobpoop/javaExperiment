@@ -35,14 +35,49 @@ Object 表示目标对象方法的返回值。
 
 ### InvocationHandler接口
 
-InvocationHandler接口是接口调用处理器
+InvocationHandler是接口调用处理器，其子类用于对目标类方法进行增强。
 
 在InvocationHandler中，目标对象是Object类，不知道目标对象的具体类型，因此不能直接调用目标对象的方法，必须调用Method对象的invoke方法的方法调用目标方法。
 
-todo：探测Proxy.newProxyInstance如何探测到每个代理方法的
 
-###  
+```
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
+```
 
+参数：
+
+1. Object proxy 表示JDK创建的代理对象，无需赋值。
+2. Method method：目标类中的方法，jdk提供Method对象。
+3. Object[] args：目标方法的参数。
+
+返回值：
+
+- Object 表示增强后的目标方法的返回值。
+
+
+    注意:在使用InvocationHandler时，无需使用proxy对象，只需要操作method和args即可。
+
+### Proxy
+
+Proxy根据目标类接口和InvocationHandler增强方法在程序运行时生成字节码，然后进行加载，初始化。
+
+```
+public static Object newProxyInstance(ClassLoader loader,
+                                          Class<?>[] interfaces,
+                                          InvocationHandler h)
+```
+
+参数：
+
+1. ClassLoader loader 类加载器，负载向内存中加载对象。
+2. Class<?>[] interfaces：目标对象实现的接口
+3. InvocationHandler h：代理类要完成的功能。
+
+返回值：
+
+- Object 代理实例对象。
+
+参考：https://www.jianshu.com/p/d0ee1ca57f14
 
 
 ## Cglib扩展
@@ -52,4 +87,4 @@ CGlib是第三方组件。
 
 JDK通过实现类的接口创建代理对象。但是Cglib更灵活，它通过继承实现类，重写实现类的方法就可创建代理对象，不需要实现类的接口。
 
-注意：Cglib要求代理方法不能是final，不然无法重写目标类方法。
+    注意：Cglib要求代理方法不能是final，不然无法重写目标类方法。
