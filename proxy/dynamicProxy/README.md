@@ -17,7 +17,7 @@ Method method = ClothFactory.class.getMethod("sell", int.class);
 
 返回值：
 
-匹配指定方法名和参数类型的Method对象。
+- 匹配指定方法名和参数类型的Method对象。
 
 
 ```
