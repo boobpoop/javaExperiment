@@ -99,5 +99,125 @@ java_outer_classname设置如下：
 
     syntax = "proto3";
 
+## proto文件编译解读
+
+源proto文件如下，在内部类Student中定义类基本类型成员、枚举类型和内部类PhoneNumber：
+
+```
+syntax = "proto3";
+//生成文件所在包名
+option java_package = "server.proto";
+//生成的java文件名
+option java_outer_classname = "StudentProto";
+
+message Student {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  //枚举类
+  enum Sex {
+    MAN = 0;
+    WOMAN = 1;
+  }
+  Sex sex = 4 ;
+
+  enum PhoneType{
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+  //内部类
+  message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2 ;
+  }
+  //集合
+  repeated PhoneNumber phone = 5;
+}
+
+```
+
+编译后，生成类StudentProto这个Java类，该类中，有Student内部类和StudentOrBuilder接口：
+
+```
+    public interface StudentOrBuilder extends MessageOrBuilder {
+        int getId();
+
+        String getName();
+
+        ByteString getNameBytes();
+
+        String getEmail();
+
+        ByteString getEmailBytes();
+
+        int getSexValue();
+
+        StudentProto.Student.Sex getSex();
+
+        List<StudentProto.Student.PhoneNumber> getPhoneList();
+
+        StudentProto.Student.PhoneNumber getPhone(int var1);
+    }
+```
+
+Student类实现了StudentOrBuilder接口：
+
+```
+
+public static final class Student extends GeneratedMessageV3 implements StudentProto.StudentOrBuilder {
+        public static final int ID_FIELD_NUMBER = 1;
+        private int id_;
+        public static final int NAME_FIELD_NUMBER = 2;
+        private volatile Object name_;
+        public static final int EMAIL_FIELD_NUMBER = 3;
+        private volatile Object email_;
+        public static final int SEX_FIELD_NUMBER = 4;
+        private int sex_;
+        public static final int PHONE_FIELD_NUMBER = 5;
+        private List<StudentProto.Student.PhoneNumber> phone_;
+        
+        //内部类Student实现StudentOrBuilder的get方法,省略...
+        //并实现类set方法，省略...
+        getId()...
+        setId()...
+        getName()...
+        setName()...
+        getEmail()...
+        setEmail()...
+        getSex()...
+        setSex()...
+        getPhone()...
+        setPhone()...
+```
+
+同理，在Student内部，也有PhoneNumberOrBuilder和PhoneNumber类：
+
+```
+public interface PhoneNumberOrBuilder extends MessageOrBuilder {
+            String getNumber();
+
+            ByteString getNumberBytes();
+
+            int getTypeValue();
+
+            StudentProto.Student.PhoneType getType();
+        }
+```
+PhoneNumber类实现PhoneNumberOrBuilder的get方法：
+
+```
+ public static final class PhoneNumber extends GeneratedMessageV3 implements StudentProto.Student.PhoneNumberOrBuilder {
+            public static final int NUMBER_FIELD_NUMBER = 1;
+            private volatile Object number_;
+            public static final int TYPE_FIELD_NUMBER = 2;
+            private int type_;
+            
+            //get和set方法，省略...
+            get...
+            set...
+ }
+```
+
 
 
